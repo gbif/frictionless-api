@@ -1,0 +1,137 @@
+/*
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.gbif.frictionless.metadata;
+
+import java.io.Serializable;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import lombok.Builder;
+import lombok.Data;
+
+/**
+ * Frictionless metadata
+ * <p>
+ * Data Package is a simple specification for data access and delivery.
+ */
+@Data
+@Builder
+public class FrictionlessMetadata<C extends FrictionlessContributor, L extends FrictionlessLicense, S extends FrictionlessSource>
+    implements DataPackageMetadata, Serializable {
+
+  private final static long serialVersionUID = 5948080618683312611L;
+
+  /**
+   * Title
+   * <p>
+   * A human-readable title.
+   */
+  private String title;
+
+  /**
+   * Version
+   * <p>
+   * A version string identifying the version of the package.
+   */
+  private String version = "1.0";
+
+  /**
+   * Profile
+   * <p>
+   * The profile of this descriptor.
+   */
+  private String profile = "data-package";
+
+  /**
+   * Name
+   * <p>
+   * An identifier string. Lower case characters with `.`, `_`, `-` and `/` are allowed.
+   */
+  private String name;
+
+  /**
+   * ID
+   * <p>
+   * A property reserved for globally unique identifiers. Examples of identifiers that are unique include UUIDs and DOIs.
+   */
+  private String id;
+
+  /**
+   * Description
+   * <p>
+   * A text description. Markdown is encouraged.
+   */
+  private String description;
+
+  /**
+   * Home Page
+   * <p>
+   * The home on the web that is related to this data package.
+   */
+  private URI homepage;
+
+  /**
+   * Created
+   * <p>
+   * The datetime on which this descriptor was created.
+   */
+  private Date created;
+
+  /**
+   * Contributors
+   * <p>
+   * The contributors to this descriptor.
+   */
+  private List<C> contributors = new ArrayList<>();
+
+  /**
+   * Keywords
+   * <p>
+   * A list of keywords that describe this package.
+   */
+  private List<String> keywords = new ArrayList<>();
+
+  /**
+   * Image
+   * <p>
+   * An image to represent this package.
+   */
+  private String image;
+
+  /**
+   * Licenses
+   * <p>
+   * The license(s) under which this package is published.
+   */
+  private List<L> licenses = new ArrayList<>();
+
+  /**
+   * Sources
+   * <p>
+   * The raw sources for this resource.
+   */
+  private List<S> sources = new ArrayList<>();
+
+  @SuppressWarnings("FieldMayBeFinal")
+  private Map<String, Object> additionalProperties = new HashMap<>();
+
+  public void setAdditionalProperty(String name, Object value) {
+    this.additionalProperties.put(name, value);
+  }
+
+}
