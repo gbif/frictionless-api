@@ -20,8 +20,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Data Resource
@@ -30,6 +36,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FrictionlessResource<S extends FrictionlessSource, L extends FrictionlessLicense> implements Serializable {
 
   private final static long serialVersionUID = -7790507710447205789L;
@@ -140,8 +148,11 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
   private String hash;
 
   @SuppressWarnings("FieldMayBeFinal")
+  @JsonIgnore
+  @JsonAnyGetter
   private Map<String, Object> additionalProperties = new HashMap<>();
 
+  @JsonAnySetter
   public void setAdditionalProperty(String name, Object value) {
     this.additionalProperties.put(name, value);
   }

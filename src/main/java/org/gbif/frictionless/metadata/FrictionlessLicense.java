@@ -17,8 +17,14 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * License
@@ -27,6 +33,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FrictionlessLicense implements Serializable {
 
   private final static long serialVersionUID = 5529108333342991396L;
@@ -52,9 +60,11 @@ public class FrictionlessLicense implements Serializable {
    */
   private String title;
 
-  @SuppressWarnings("FieldMayBeFinal")
+  @JsonIgnore
+  @JsonAnyGetter
   private Map<String, Object> additionalProperties = new HashMap<>();
 
+  @JsonAnySetter
   public void setAdditionalProperty(String name, Object value) {
     this.additionalProperties.put(name, value);
   }

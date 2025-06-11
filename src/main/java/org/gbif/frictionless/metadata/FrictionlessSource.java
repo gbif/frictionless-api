@@ -17,8 +17,14 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Source
@@ -27,6 +33,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FrictionlessSource implements Serializable {
 
   private final static long serialVersionUID = -3013088705460436883L;
@@ -54,8 +62,11 @@ public class FrictionlessSource implements Serializable {
   private String email;
 
   @SuppressWarnings("FieldMayBeFinal")
+  @JsonIgnore
+  @JsonAnyGetter
   private Map<String, Object> additionalProperties = new HashMap<>();
 
+  @JsonAnySetter
   public void setAdditionalProperty(String name, Object value) {
     this.additionalProperties.put(name, value);
   }
