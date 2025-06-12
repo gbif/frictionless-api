@@ -13,13 +13,19 @@
  */
 package org.gbif.frictionless.metadata;
 
+import org.gbif.frictionless.validation.BasicMetadata;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,6 +51,8 @@ public class FrictionlessContributor implements Serializable {
    * A human-readable title.
    * (Required)
    */
+  @JsonProperty("title")
+  @NotBlank(message = "validation.input.required", groups = BasicMetadata.class)
   private String title;
 
   /**
@@ -52,6 +60,8 @@ public class FrictionlessContributor implements Serializable {
    * <p>
    * A fully qualified URL, or a POSIX file path.
    */
+  @JsonProperty("path")
+  @Pattern(regexp = "^(?=^[^./~])(^((?!\\.{2}).)*$).*$", groups = BasicMetadata.class)
   private String path;
 
   /**
@@ -59,6 +69,8 @@ public class FrictionlessContributor implements Serializable {
    * <p>
    * An email address.
    */
+  @JsonProperty("email")
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String email;
 
   /**
@@ -66,8 +78,11 @@ public class FrictionlessContributor implements Serializable {
    * <p>
    * An organizational affiliation for this contributor.
    */
+  @JsonProperty("organization")
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String organization;
 
+  @JsonProperty("role")
   private String role = "contributor";
 
   @SuppressWarnings("FieldMayBeFinal")

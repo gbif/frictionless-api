@@ -13,13 +13,18 @@
  */
 package org.gbif.frictionless.metadata;
 
+import org.gbif.frictionless.validation.BasicMetadata;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,6 +49,9 @@ public class FrictionlessLicense implements Serializable {
    * <p>
    * MUST be an Open Definition license identifier, see <a href="http://licenses.opendefinition.org/">...</a>
    */
+  @JsonProperty("name")
+  @NotNull(message = "validation.datapackage.metadata.license.name.required", groups = BasicMetadata.class)
+  @Pattern(regexp = "^([-a-zA-Z0-9._])+$", groups = BasicMetadata.class)
   private String name;
 
   /**
@@ -51,6 +59,8 @@ public class FrictionlessLicense implements Serializable {
    * <p>
    * A fully qualified URL, or a POSIX file path.
    */
+  @JsonProperty("path")
+  @Pattern(regexp = "^(?=^[^./~])(^((?!\\.{2}).)*$).*$", groups = BasicMetadata.class)
   private String path;
 
   /**
@@ -58,6 +68,7 @@ public class FrictionlessLicense implements Serializable {
    * <p>
    * A human-readable title.
    */
+  @JsonProperty("title")
   private String title;
 
   @JsonIgnore

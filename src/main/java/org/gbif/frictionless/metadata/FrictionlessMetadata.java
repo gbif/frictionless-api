@@ -13,6 +13,9 @@
  */
 package org.gbif.frictionless.metadata;
 
+import org.gbif.frictionless.validation.BasicMetadata;
+import org.gbif.frictionless.validation.KeywordsMetadata;
+
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
@@ -23,12 +26,19 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 /**
  * Frictionless metadata
@@ -49,6 +59,8 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * A human-readable title.
    */
+  @JsonProperty("title")
+  @NotNull(message = "validation.input.required", groups = BasicMetadata.class)
   private String title;
 
   /**
@@ -56,6 +68,7 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * A version string identifying the version of the package.
    */
+  @JsonProperty("version")
   private String version = "1.0";
 
   /**
@@ -63,6 +76,7 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * The profile of this descriptor.
    */
+  @JsonProperty("profile")
   private String profile = "data-package";
 
   /**
@@ -70,6 +84,8 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * An identifier string. Lower case characters with `.`, `_`, `-` and `/` are allowed.
    */
+  @JsonProperty("name")
+  @Pattern(regexp = "^([-a-z0-9._/])+$", groups = BasicMetadata.class)
   private String name;
 
   /**
@@ -77,6 +93,7 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * A property reserved for globally unique identifiers. Examples of identifiers that are unique include UUIDs and DOIs.
    */
+  @JsonProperty("id")
   private String id;
 
   /**
@@ -84,6 +101,8 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * A text description. Markdown is encouraged.
    */
+  @JsonProperty("description")
+  @NotNull(message = "validation.input.required", groups = BasicMetadata.class)
   private String description;
 
   /**
@@ -91,6 +110,7 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * The home on the web that is related to this data package.
    */
+  @JsonProperty("homepage")
   private URI homepage;
 
   /**
@@ -98,6 +118,8 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * The datetime on which this descriptor was created.
    */
+  @JsonProperty("created")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
   private Date created;
 
   /**
@@ -105,6 +127,9 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * The contributors to this descriptor.
    */
+  @JsonProperty("contributors")
+  @NotNull(message = "validation.input.required", groups = BasicMetadata.class)
+  @Valid
   private List<C> contributors = new ArrayList<>();
 
   /**
@@ -112,6 +137,10 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * A list of keywords that describe this package.
    */
+  @JsonProperty("keywords")
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
+  @NotNull(message = "validation.input.notNull", groups = KeywordsMetadata.class)
+  @Valid
   private List<String> keywords = new ArrayList<>();
 
   /**
@@ -119,6 +148,8 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * An image to represent this package.
    */
+  @JsonProperty("image")
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   private String image;
 
   /**
@@ -126,6 +157,9 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * The license(s) under which this package is published.
    */
+  @JsonProperty("licenses")
+  @NotNull(message = "validation.input.required", groups = BasicMetadata.class)
+  @Valid
   private List<L> licenses = new ArrayList<>();
 
   /**
@@ -133,6 +167,9 @@ public class FrictionlessMetadata<C extends FrictionlessContributor, L extends F
    * <p>
    * The raw sources for this resource.
    */
+  @JsonProperty("sources")
+  @NotNull(message = "validation.input.notNull", groups = BasicMetadata.class)
+  @Valid
   private List<S> sources = new ArrayList<>();
 
   @SuppressWarnings("FieldMayBeFinal")

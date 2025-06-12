@@ -13,13 +13,18 @@
  */
 package org.gbif.frictionless.metadata;
 
+import org.gbif.frictionless.validation.BasicMetadata;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,6 +50,8 @@ public class FrictionlessSource implements Serializable {
    * A human-readable title.
    * (Required)
    */
+  @JsonProperty("title")
+  @NotNull(message = "validation.input.required", groups = BasicMetadata.class)
   private String title;
 
   /**
@@ -52,6 +59,8 @@ public class FrictionlessSource implements Serializable {
    * <p>
    * A fully qualified URL, or a POSIX file path.
    */
+  @JsonProperty("path")
+  @Pattern(regexp = "^(?=^[^./~])(^((?!\\.{2}).)*$).*$", groups = BasicMetadata.class)
   private String path;
 
   /**
@@ -59,6 +68,7 @@ public class FrictionlessSource implements Serializable {
    * <p>
    * An email address.
    */
+  @JsonProperty("email")
   private String email;
 
   @SuppressWarnings("FieldMayBeFinal")

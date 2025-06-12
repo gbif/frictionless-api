@@ -13,16 +13,22 @@
  */
 package org.gbif.frictionless.metadata;
 
+import org.gbif.frictionless.validation.InternalField;
+
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,6 +53,7 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * The profile of this descriptor.
    */
+  @JsonProperty("profile")
   private String profile = "data-resource";
 
   /**
@@ -54,6 +61,8 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * An identifier string. Lower case characters with `.`, `_`, `-` and `/` are allowed.
    */
+  @JsonProperty("name")
+  @Pattern(regexp = "^([-a-z0-9._/])+$", groups = InternalField.class)
   private CharSequence name;
 
   /**
@@ -61,6 +70,7 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * A reference to the data for this resource, as either a path as a string, or an array of paths as strings. of valid URIs.
    */
+  @JsonProperty("path")
   private Object path;
 
   /**
@@ -68,6 +78,7 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * Inline data for this resource.
    */
+  @JsonProperty("data")
   private Object data;
 
   /**
@@ -75,6 +86,7 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * A schema for this resource.
    */
+  @JsonProperty("schema")
   private String schema;
 
   /**
@@ -82,6 +94,7 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * A human-readable title.
    */
+  @JsonProperty("title")
   private String title;
 
   /**
@@ -89,6 +102,7 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * A text description. Markdown is encouraged.
    */
+  @JsonProperty("description")
   private String description;
 
   /**
@@ -96,6 +110,7 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * The home on the web that is related to this data package.
    */
+  @JsonProperty("homepage")
   private URI homepage;
 
   /**
@@ -103,6 +118,9 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * The raw sources for this resource.
    */
+  @JsonProperty("sources")
+  @Size(groups = InternalField.class)
+  @Valid
   private List<S> sources = new ArrayList<>();
 
   /**
@@ -110,6 +128,9 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * The license(s) under which the resource is published.
    */
+  @JsonProperty("licenses")
+  @Size(min = 1, groups = InternalField.class)
+  @Valid
   private List<L> licenses = new ArrayList<>();
 
   /**
@@ -117,6 +138,7 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * The file format of this resource.
    */
+  @JsonProperty("format")
   private String format;
 
   /**
@@ -124,6 +146,8 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * The media type of this resource. Can be any valid media type listed with <a href="https://www.iana.org/assignments/media-types/media-types.xhtml">IANA</a>.
    */
+  @JsonProperty("mediatype")
+  @Pattern(regexp = "^(.+)/(.+)$")
   private String mediatype;
 
   /**
@@ -131,6 +155,7 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * The file encoding of this resource.
    */
+  @JsonProperty("encoding")
   private String encoding = "utf-8";
 
   /**
@@ -138,6 +163,7 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * The size of this resource in bytes.
    */
+  @JsonProperty("bytes")
   private Integer bytes;
 
   /**
@@ -145,6 +171,8 @@ public class FrictionlessResource<S extends FrictionlessSource, L extends Fricti
    * <p>
    * The MD5 hash of this resource. Indicate other hashing algorithms with the {algorithm}:{hash} format.
    */
+  @JsonProperty("hash")
+  @Pattern(regexp = "^([^:]+:[a-fA-F0-9]+|[a-fA-F0-9]{32}|)$", groups = InternalField.class)
   private String hash;
 
   @SuppressWarnings("FieldMayBeFinal")
